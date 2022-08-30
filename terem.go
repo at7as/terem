@@ -3,16 +3,11 @@ package terem
 import (
 	"bufio"
 	"os"
-
-	"golang.org/x/sys/windows"
 )
 
 type (
 	terminal struct {
-		in   *bufio.Reader
 		out  *bufio.Writer
-		winO windows.Handle
-		scan *bufio.Scanner
 		do   bool
 		c    Controller
 		size struct {
@@ -41,7 +36,8 @@ func (t *terminal) resize() error {
 }
 
 var (
-	t     *terminal
+	t *terminal
+	// Event ...
 	Event = make(chan InputEvent)
 )
 
@@ -51,10 +47,7 @@ func Init(c Controller) error {
 	t = &terminal{}
 	t.resize()
 	t.c = c
-	// t.in = bufio.NewReader(os.Stdin)
 	t.out = bufio.NewWriter(os.Stdout)
-	t.winO = winOut
-	// t.scan = bufio.NewScanner(os.Stdin)
 
 	return nil
 

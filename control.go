@@ -22,6 +22,9 @@ func Read() {
 func ToCombo(e InputEvent) InputCombo {
 
 	i := InputCombo{}
+	if e.Event[0] == 1 {
+		i.Pressed = true
+	}
 	i.Key = InputKey(e.Event[6])
 	i.Char = rune(binary.BigEndian.Uint16([]byte{e.Event[11], e.Event[10]}))
 

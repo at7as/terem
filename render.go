@@ -2,8 +2,6 @@ package terem
 
 import (
 	"strconv"
-
-	"golang.org/x/sys/windows"
 )
 
 // Finish ...
@@ -47,8 +45,7 @@ func CursorShow() {
 // Write ...
 func Write(s string) {
 
-	windows.Write(t.winO, []byte(s))
-	// t.out.WriteString(s)
+	t.out.WriteString(s)
 
 }
 

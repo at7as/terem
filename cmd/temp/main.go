@@ -16,15 +16,19 @@ func main() {
 		select {
 		case e := <-terem.Event:
 
-			if e.Event[10] == 3 {
-				os.Exit(0)
-			}
+			if e.EventType == terem.InputTypeKey {
 
-			if e.EventType == 1 && e.Event[0] == 1 {
+				k := terem.ToCombo(e)
 
-				i := terem.ToCombo(e)
-				fmt.Println(i)
-				fmt.Println(string(i.Char))
+				if k.Pressed {
+
+					if k.Ctrl && k.Key == terem.KeyC {
+						os.Exit(0)
+					}
+
+					fmt.Println(string(k.Char))
+
+				}
 
 			}
 

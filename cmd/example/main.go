@@ -9,14 +9,11 @@ import (
 type controller struct {
 	count int
 	r     rune
-	n     int
-	s     string
 }
 
 func (c *controller) Render() error {
 
-	terem.WriteAt(2, 6, c.s)
-	terem.WriteAt(2, 7, string(c.r))
+	terem.WriteAt(2, 6, string(c.r))
 
 	for i := 0; i < 8; i++ {
 		terem.Style(terem.Color(i+30), terem.ColorBlack)
@@ -41,8 +38,20 @@ func (c *controller) Render() error {
 
 func (c *controller) Control(e terem.InputEvent) error {
 
-	if e.Event[10] == 3 {
-		os.Exit(0)
+	if e.EventType == terem.InputTypeKey {
+
+		k := terem.ToCombo(e)
+
+		if k.Pressed {
+
+			if k.Ctrl && k.Key == terem.KeyC {
+				os.Exit(0)
+			}
+
+			c.r = k.Char
+
+		}
+
 	}
 
 	return nil
