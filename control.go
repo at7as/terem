@@ -3,51 +3,49 @@ package terem
 import "encoding/binary"
 
 // Read ...
-func Read() {
+func Read(err *error) {
 
 	var e InputEvent
 
 	for {
 
-		if err := readConsoleInput(&e); err != nil {
-			panic(err)
-		}
+		*err = readConsoleInput(&e)
 		Event <- e
 
 	}
 
 }
 
-// ToCombo ...
-func ToCombo(e InputEvent) InputCombo {
+// Combine ...
+func Combine(e InputEvent) InputComb {
 
-	i := InputCombo{}
+	c := InputComb{}
 	if e.Event[0] == 1 {
-		i.Pressed = true
+		c.Pressed = true
 	}
-	i.Key = InputKey(e.Event[6])
-	i.Char = rune(binary.BigEndian.Uint16([]byte{e.Event[11], e.Event[10]}))
+	c.Key = InputKey(e.Event[6])
+	c.Char = rune(binary.BigEndian.Uint16([]byte{e.Event[11], e.Event[10]}))
 
 	m := uint8(e.Event[12])
 	if m&0x01 != 0 || m&0x02 != 0 {
-		i.Alt = true
+		c.Alt = true
 	}
 	if m&0x04 != 0 || m&0x08 != 0 {
-		i.Ctrl = true
+		c.Ctrl = true
 	}
 	if m&0x10 != 0 {
-		i.Shift = true
+		c.Shift = true
 	}
 	if m&0x20 != 0 {
-		i.Num = true
+		c.Num = true
 	}
 	if m&0x40 != 0 {
-		i.Scroll = true
+		c.Scroll = true
 	}
 	if m&0x80 != 0 {
-		i.Caps = true
+		c.Caps = true
 	}
 
-	return i
+	return c
 
 }

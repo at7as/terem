@@ -1,4 +1,4 @@
-Lightweight module for console UI render and control
+Simple module for console UI render and control
 
 Only Windows support now
 

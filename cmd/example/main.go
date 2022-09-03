@@ -40,7 +40,7 @@ func (c *controller) Control(e terem.InputEvent) error {
 
 	if e.EventType == terem.InputTypeKey {
 
-		k := terem.ToCombo(e)
+		k := terem.Combine(e)
 
 		if k.Pressed {
 

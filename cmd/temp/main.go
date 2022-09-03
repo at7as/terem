@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	go terem.Read()
+	go terem.Read(nil)
 
 	for {
 
@@ -18,7 +18,7 @@ func main() {
 
 			if e.EventType == terem.InputTypeKey {
 
-				k := terem.ToCombo(e)
+				k := terem.Combine(e)
 
 				if k.Pressed {
 

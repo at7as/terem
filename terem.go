@@ -15,7 +15,8 @@ type (
 			h int
 		}
 	}
-	color uint8
+	// Color ...
+	Color uint8
 	// Controller ...
 	Controller interface {
 		Render() error
@@ -45,11 +46,9 @@ var (
 func Init(c Controller) error {
 
 	t = &terminal{}
-	t.resize()
 	t.c = c
 	t.out = bufio.NewWriter(os.Stdout)
-
-	return nil
+	return t.resize()
 
 }
 
@@ -64,16 +63,23 @@ func Do(v bool) {
 func Run(c Controller) error {
 
 	if t == nil {
-		Init(c)
+		if err := Init(c); err != nil {
+			return err
+		}
 	}
 
-	go Read()
+	go Read(nil)
 
 	Do(true)
 	for t.do {
 
-		Clear()
-		Style(ColorWhite, ColorBlack)
+		if err := Clear(); err != nil {
+			return err
+		}
+
+		if err := Style(ColorWhite, ColorBlack); err != nil {
+			return err
+		}
 
 		if err := t.c.Render(); err != nil {
 			return err

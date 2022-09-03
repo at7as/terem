@@ -24,7 +24,7 @@ const (
 	InputTypeFocus  InputType = 0x0010
 )
 
-type InputCombo struct {
+type InputComb struct {
 	Pressed bool
 	Key     InputKey
 	Char    rune

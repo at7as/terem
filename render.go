@@ -7,68 +7,81 @@ import (
 // Finish ...
 func Finish() error {
 
-	Write(EscColorReset)
+	if err := Write(EscColorReset); err != nil {
+		return err
+	}
+
 	return t.out.Flush()
 
 }
 
 // Clear ...
-func Clear() {
+func Clear() error {
 
-	Write(EscClearScreen)
-	Write(EscCursorMoveHome)
-	Write(EscCursorHide)
+	if err := Write(EscCursorMoveHome); err != nil {
+		return err
+	}
+
+	if err := Write(EscCursorHide); err != nil {
+		return err
+	}
+
+	return Write(EscClearScreen)
+
+}
+
+// Move ...
+func Move(x, y int) error {
+
+	return Write("\u001b[" + strconv.Itoa(y) + ";" + strconv.Itoa(x) + "H")
 
 }
 
 // Cursor ...
-func Cursor(x, y int) {
+func Cursor(show bool) error {
 
-	Write("\u001b[" + strconv.Itoa(y) + ";" + strconv.Itoa(x) + "H")
+	if show {
+		return Write(EscCursorShow)
+	}
 
-}
-
-// CursorHide ...
-func CursorHide() {
-
-	Write(EscCursorHide)
-
-}
-
-// CursorShow ...
-func CursorShow() {
-
-	Write(EscCursorShow)
+	return Write(EscCursorHide)
 
 }
 
 // Write ...
-func Write(s string) {
+func Write(s string) error {
 
-	t.out.WriteString(s)
+	if _, err := t.out.WriteString(s); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
 // WriteAt ...
-func WriteAt(x, y int, s string) {
+func WriteAt(x, y int, s string) error {
 
-	Cursor(x, y)
-	Write(s)
+	if err := Move(x, y); err != nil {
+		return err
+	}
+
+	return Write(s)
 
 }
 
 // Style ...
-func Style(fg, bg color) {
+func Style(fg, bg Color) error {
 
-	if fg+bg != ColorCurrent {
+	if fg+bg != ColorEmpty {
 		s := "\u001b["
 
-		if fg != ColorCurrent {
+		if fg != ColorEmpty {
 			s += strconv.Itoa(int(fg))
 		}
 
-		if bg != ColorCurrent {
-			if fg != ColorCurrent {
+		if bg != ColorEmpty {
+			if fg != ColorEmpty {
 				s += ";"
 			}
 			s += strconv.Itoa(int(bg) + 10)
@@ -76,25 +89,20 @@ func Style(fg, bg color) {
 
 		s += "m"
 
-		Write(s)
+		return Write(s)
 
 	}
 
-}
-
-// Color ...
-func Color(c int) color {
-
-	return color(c)
+	return nil
 
 }
 
-// ColorCurrent ...
-const ColorCurrent color = 0
+// ColorEmpty ...
+const ColorEmpty Color = 0
 
 // Color ...
 const (
-	ColorBlack color = iota + 30
+	ColorBlack Color = iota + 30
 	ColorRed
 	ColorGreen
 	ColorYellow
@@ -106,7 +114,7 @@ const (
 
 // ColorBright ...
 const (
-	ColorBlackBright color = iota + 90
+	ColorBlackBright Color = iota + 90
 	ColorRedBright
 	ColorGreenBright
 	ColorYellowBright
