@@ -3,13 +3,13 @@ package terem
 import "encoding/binary"
 
 // Read ...
-func Read(err *error) {
+func Read() {
 
 	var e InputEvent
 
 	for {
 
-		*err = readConsoleInput(&e)
+		t.err = readConsoleInput(&e)
 		Event <- e
 
 	}

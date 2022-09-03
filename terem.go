@@ -14,6 +14,7 @@ type (
 			w int
 			h int
 		}
+		err error
 	}
 	// Color ...
 	Color uint8
@@ -68,7 +69,7 @@ func Run(c Controller) error {
 		}
 	}
 
-	go Read(nil)
+	go Read()
 
 	Do(true)
 	for t.do {

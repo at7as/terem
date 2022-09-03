@@ -9,7 +9,9 @@ import (
 
 func main() {
 
-	go terem.Read(nil)
+	terem.Init(nil)
+
+	go terem.Read()
 
 	for {
 
